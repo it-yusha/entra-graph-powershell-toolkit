@@ -1,0 +1,14 @@
+# Local configuration (may contain tenant-specific identifiers)
+config/config.json
+config/*.local.json
+
+# Generated personal data and operational logs
+output/
+logs/
+*.log
+
+# PowerShell/editor artifacts
+*.clixml
+.vscode/
+.idea/
+.DS_Store

@@ -1,0 +1,22 @@
+{
+  "SchemaVersion": "1.0",
+  "TenantId": "",
+  "GroupId": "00000000-0000-0000-0000-000000000001",
+  "MembershipMode": "Transitive",
+  "TargetApp": {
+    "AppId": "00000000-0000-0000-0000-000000000002",
+    "DisplayName": "Example Business Application"
+  },
+  "Query": {
+    "LookbackDays": 30,
+    "SuccessfulSignInsOnly": true
+  },
+  "Output": {
+    "CsvPath": "../output/app-last-signin.csv",
+    "RemovedMemberHandling": "Retain"
+  },
+  "Logging": {
+    "Directory": "../logs",
+    "Level": "Information"
+  }
+}
