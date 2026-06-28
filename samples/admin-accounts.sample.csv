@@ -1,0 +1,6 @@
+"UserPrincipalName","ExcludeFromInactiveCheck","InactiveThresholdDays","Owner","Purpose","AccountType","Note"
+"admin01@example.invalid","false","90","Example Operations Team","Daily administration","NamedAdmin","Regular administrator account"
+"admin02@example.invalid","false","180","Example Platform Team","Scheduled maintenance","NamedAdmin","Extended threshold approved"
+"admin03@example.invalid","false","","Example Operations Team","Legacy administration","NamedAdmin","Uses a non-interactive workflow"
+"emergency-admin01@example.invalid","true","","Example Security Team","Emergency access","EmergencyAccess","Excluded by documented policy"
+"disabled-admin01@example.invalid","false","90","Example Operations Team","Former administrator","NamedAdmin","Expected to be disabled"

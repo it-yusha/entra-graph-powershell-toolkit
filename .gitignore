@@ -4,6 +4,7 @@ config/*.local.json
 config/*.config.json
 
 # Generated personal data and operational logs
+input/
 output/
 logs/
 *.log

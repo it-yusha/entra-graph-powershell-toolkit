@@ -1,0 +1,12 @@
+// Tokens are replaced by ConvertTo-AdminAccountSignInKql.
+// The query returns only a stable user ID and the latest successful timestamp.
+let targetUserIds = dynamic({{TARGET_USER_IDS_JSON}});
+{{SIGNIN_TABLE}}
+| project TimeGenerated, ResultType = tostring(ResultType), UserId = tostring(UserId)
+| where TimeGenerated between (datetime({{START_UTC}}) .. datetime({{END_UTC}}))
+| where ResultType in ("0", "Success", "success")
+| extend NormalizedUserId = tolower(UserId)
+| where isnotempty(NormalizedUserId)
+| where set_has_element(targetUserIds, NormalizedUserId)
+| summarize LastSignInDateTime = max(TimeGenerated) by UserId = NormalizedUserId
+| project UserId, LastSignInDateTime

@@ -1,0 +1,30 @@
+{
+  "SchemaVersion": "1.0",
+  "TenantId": "",
+  "SubscriptionId": "",
+  "WorkspaceId": "00000000-0000-0000-0000-000000000003",
+  "Input": {
+    "CsvPath": "../input/admin-accounts.csv",
+    "PassthroughColumns": [
+      "Owner",
+      "Purpose",
+      "AccountType",
+      "Note"
+    ]
+  },
+  "Evaluation": {
+    "DefaultInactiveThresholdDays": 90,
+    "LookbackDays": 730,
+    "EvidenceCoverageStartDateTime": "2024-01-01T00:00:00Z",
+    "BatchSize": 500,
+    "KqlTemplatePath": "../kql/admin-account-last-signin.kql"
+  },
+  "Output": {
+    "Directory": "../output",
+    "FileNamePrefix": "admin-account-inactivity-review"
+  },
+  "Logging": {
+    "Directory": "../logs",
+    "Level": "Information"
+  }
+}

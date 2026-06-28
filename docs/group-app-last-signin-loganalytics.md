@@ -18,9 +18,10 @@ The Workspace and its long-term logs remain under IT control. The output intenti
 6. Render KQL from a repository template using only validated GUIDs, UTC timestamps, and allow-listed table names.
 7. Query `SigninLogs`, and optionally `AADNonInteractiveUserSignInLogs`, separately.
 8. Aggregate `max(TimeGenerated)` by `UserId` inside the Workspace.
-9. Take the later result across the selected tables.
-10. Join with the current Graph member list and output every member.
-11. Write the CSV through a temporary file and create a metadata-only operational log.
+9. Preserve the interactive and non-interactive timestamps and calculate the later result.
+10. Classify each user as both, interactive only, non-interactive only, or no record.
+11. Join with the current Graph member list and output every member with Japanese companion fields.
+12. Write the CSV through a temporary file and create a metadata-only operational log.
 
 The query returns only `UserId` and `LastSignInDateTime`. IP address, device, location, user agent, Conditional Access, correlation identifiers, and raw status details do not leave Log Analytics through this tool.
 
@@ -50,6 +51,32 @@ If the business question is about access to a resource API rather than sign-in t
 Defaulting `IncludeNonInteractiveSignIns` to `true` is useful for the broad operational question “when did this app last access Entra on behalf of the user?” It may not mean that the user actively opened or used the application at that time.
 
 Set it to `false` when the approved definition is explicitly limited to interactive sign-ins. Record that decision in the internal runbook supplied with the report.
+
+The CSV keeps `LastInteractiveSignInDateTime` and
+`LastNonInteractiveSignInDateTime` separate. A `NonInteractiveOnly` row includes
+a Japanese warning that the evidence may be token activity rather than direct
+human interaction. If non-interactive logs aren't queried, the output says so
+explicitly instead of treating the empty column as proof that no such activity
+exists.
+
+## Human-readable output
+
+The original English columns remain in place for backward compatibility. The
+report adds:
+
+- `SignInFoundJa`
+- `QueriedSignInTypes` and `QueriedSignInTypesJa`
+- `SignInPattern` and `SignInPatternJa`
+- `LastInteractiveSignInDateTime`
+- `LastNonInteractiveSignInDateTime`
+- `EvaluationWindowStartDateTime`
+- `EvaluationWindowEndDateTime`
+- `NoteJa`
+
+Patterns are `Both`, `InteractiveOnly`, `NonInteractiveOnly`, and
+`NoSignInRecord` when both sources are queried. Interactive-only mode uses
+`InteractiveObserved` or `NoInteractiveSignInRecord` so an unqueried source is
+never presented as a negative result.
 
 ## KQL and performance
 
@@ -129,6 +156,8 @@ For every report:
 - Investigate unexpected zero counts before distributing the report.
 - Share only the CSV, not the operational log, configuration, Workspace details, or raw KQL results unless separately approved.
 
-For future tools:
-
-The `SignInReview` module is intended to support reuse of configuration validation, Graph membership retrieval, KQL templating, Log Analytics query execution, logging, and atomic CSV export. A future administrator dormancy review should use a separate script, configuration schema, KQL template, output contract, and security review.
+The `SignInReview` module supports reuse of configuration validation, Graph
+lookups, KQL templating, Log Analytics queries, review classification, logging,
+and atomic CSV export. The administrator dormancy review remains a separate
+script, configuration schema, KQL template, output contract, and security
+review.

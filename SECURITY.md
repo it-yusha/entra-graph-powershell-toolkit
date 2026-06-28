@@ -22,7 +22,8 @@ For hidden-membership groups, additional access may be necessary. Grant it only 
 
 ## Output handling
 
-The report contains personal data and employee application-use metadata. Apply:
+The reports contain personal data, employee application-use metadata, and may
+contain privileged-account state and inactivity classifications. Apply:
 
 - access control and need-to-know sharing;
 - approved encrypted storage and transport;
@@ -37,6 +38,11 @@ retention design, table availability, KQL diagnostics, or long-term raw-log
 details to a report recipient unless that disclosure is separately approved.
 Share the minimal generated CSV rather than query responses or operational logs.
 
+An `InactiveCandidate` or `DisableCandidate` value is review evidence, not an
+authorization to change an account. Never feed the public report directly into
+account-disable, deletion, role-removal, or session-revocation automation.
+Approval evidence belongs in an access-controlled internal workflow.
+
 ## Internal customization
 
 Keep organization-specific configuration, documentation, destinations, schedules, and runbooks in an approved internal management location. Before company use, require human review of:
@@ -44,6 +50,8 @@ Keep organization-specific configuration, documentation, destinations, schedules
 - code and dependencies;
 - requested permissions and administrator roles;
 - application-ID semantics and success criteria;
+- trusted Log Analytics evidence start dates and inactivity thresholds;
+- emergency-access exclusions and privileged-account owners;
 - CSV recipients, retention, and removal handling;
 - error paths and test evidence;
 - applicable policy for AI-assisted code.

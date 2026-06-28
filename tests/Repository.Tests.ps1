@@ -5,6 +5,9 @@ BeforeAll {
     $graphSamplePath = Join-Path $repositoryRoot 'samples' 'sample-output.csv'
     $logConfigPath = Join-Path $repositoryRoot 'config' 'group-app-last-signin.loganalytics.config.example.json'
     $logSamplePath = Join-Path $repositoryRoot 'samples' 'group-app-last-signin-loganalytics.sample.csv'
+    $adminConfigPath = Join-Path $repositoryRoot 'config' 'admin-account-inactivity-review.config.example.json'
+    $adminInputPath = Join-Path $repositoryRoot 'samples' 'admin-accounts.sample.csv'
+    $adminOutputPath = Join-Path $repositoryRoot 'samples' 'admin-account-inactivity-review.sample.csv'
     $kqlPath = Join-Path $repositoryRoot 'kql' 'group-app-last-signin.kql'
 
     $graphColumns = @(
@@ -14,7 +17,11 @@ BeforeAll {
     )
     $logAnalyticsColumns = @(
         'UserPrincipalName', 'DisplayName', 'UserId', 'AppDisplayName', 'AppId',
-        'LastSignInDateTime', 'SignInFound', 'CheckedDateTime', 'Note'
+        'LastSignInDateTime', 'SignInFound', 'CheckedDateTime', 'Note',
+        'LastInteractiveSignInDateTime', 'LastNonInteractiveSignInDateTime',
+        'SignInFoundJa', 'QueriedSignInTypes', 'QueriedSignInTypesJa',
+        'SignInPattern', 'SignInPatternJa', 'EvaluationWindowStartDateTime',
+        'EvaluationWindowEndDateTime', 'NoteJa'
     )
 
     Import-Module $modulePath -Force
@@ -140,9 +147,45 @@ Describe 'Log Analytics example artifacts' {
         $rows[1].Note | Should -Match 'does not mean'
     }
 
+    It 'keeps interactive and non-interactive evidence distinguishable' {
+        $users = @(
+            [pscustomobject]@{
+                id                = '10000000-0000-0000-0000-000000000001'
+                userPrincipalName = 'alex.taylor@example.invalid'
+                displayName       = 'Alex Taylor'
+            },
+            [pscustomobject]@{
+                id                = '10000000-0000-0000-0000-000000000002'
+                userPrincipalName = 'jamie.lee@example.invalid'
+                displayName       = 'Jamie Lee'
+            }
+        )
+        $interactive = @{
+            '10000000-0000-0000-0000-000000000001' = [DateTimeOffset]'2026-06-01T10:00:00Z'
+        }
+        $nonInteractive = @{
+            '10000000-0000-0000-0000-000000000002' = [DateTimeOffset]'2026-06-20T10:00:00Z'
+        }
+        $rows = @(ConvertTo-GroupAppSignInReportRow `
+            -Users $users `
+            -LastInteractiveByUserId $interactive `
+            -LastNonInteractiveByUserId $nonInteractive `
+            -IncludeNonInteractiveSignIns $true `
+            -AppDisplayName 'Example Business Application' `
+            -AppId '00000000-0000-0000-0000-000000000002' `
+            -EvaluationWindowStartDateTime ([DateTimeOffset]'2024-06-28T00:00:00Z') `
+            -EvaluationWindowEndDateTime ([DateTimeOffset]'2026-06-28T00:00:00Z') `
+            -CheckedDateTime ([DateTimeOffset]'2026-06-28T00:00:00Z'))
+
+        $rows[0].SignInPattern | Should -Be 'InteractiveOnly'
+        $rows[0].SignInPatternJa | Should -Be '対話サインインのみログあり'
+        $rows[1].SignInPattern | Should -Be 'NonInteractiveOnly'
+        $rows[1].NoteJa | Should -Match '人の明示操作ではなく'
+    }
+
     It 'has the minimal documented CSV columns and dummy identities' {
         $rows = @(Import-Csv -LiteralPath $logSamplePath)
-        $rows.Count | Should -Be 2
+        $rows.Count | Should -Be 3
         ($rows[0].PSObject.Properties.Name -join ',') | Should -Be ($logAnalyticsColumns -join ',')
         foreach ($row in $rows) {
             $row.UserPrincipalName | Should -Match '@example\.invalid$'
@@ -159,6 +202,9 @@ Describe 'Published data safety' {
             Get-Content -LiteralPath $graphSamplePath -Raw
             Get-Content -LiteralPath $logConfigPath -Raw
             Get-Content -LiteralPath $logSamplePath -Raw
+            Get-Content -LiteralPath $adminConfigPath -Raw
+            Get-Content -LiteralPath $adminInputPath -Raw
+            Get-Content -LiteralPath $adminOutputPath -Raw
         ) -join "`n"
         $publishedText | Should -Not -Match '(?i)client.?secret|access.?token|certificate.?password|private.?key'
     }

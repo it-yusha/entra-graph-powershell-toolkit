@@ -1,6 +1,6 @@
 @{
     RootModule        = 'SignInReview.psm1'
-    ModuleVersion     = '1.0.0'
+    ModuleVersion     = '1.1.0'
     GUID              = '20000000-0000-0000-0000-000000000001'
     Author            = 'Repository contributors'
     CompanyName       = 'Community'
@@ -10,15 +10,21 @@
     FunctionsToExport = @(
         'Connect-SignInReviewAzure',
         'Connect-SignInReviewGraph',
+        'ConvertTo-AdminAccountInactivityReviewRow',
+        'ConvertTo-AdminAccountSignInKql',
+        'ConvertTo-GroupAppSignInReportRow',
         'ConvertTo-SignInReviewReportRow',
         'Disconnect-SignInReviewGraph',
         'Export-SignInReviewCsv',
+        'Get-SignInReviewUserByUpn',
         'Get-SignInReviewGroupUser',
+        'Import-AdminAccountReviewInput',
         'Initialize-SignInReviewLog',
         'Invoke-SignInReviewLogAnalyticsQuery',
         'ConvertTo-SignInReviewKql',
         'Protect-SignInReviewCsvText',
         'Read-SignInReviewConfiguration',
+        'Read-AdminAccountInactivityConfiguration',
         'Resolve-SignInReviewPath',
         'Split-SignInReviewBatch',
         'Write-SignInReviewLog'

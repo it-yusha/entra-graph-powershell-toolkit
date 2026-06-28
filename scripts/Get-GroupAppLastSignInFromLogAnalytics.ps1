@@ -46,7 +46,8 @@ try {
         -MembershipMode ([string]$config.MembershipMode))
     Write-SignInReviewLog Information "Retrieved $($users.Count) current user member(s) from Microsoft Graph."
 
-    $latestByUserId = @{}
+    $lastInteractiveByUserId = @{}
+    $lastNonInteractiveByUserId = @{}
     if ($users.Count -gt 0) {
         $userBatches = @(Split-SignInReviewBatch -InputObject $users -Size ([int]$config.Query.BatchSize))
         $tableNames = [Collections.Generic.List[string]]::new()
@@ -80,8 +81,14 @@ try {
                         continue
                     }
                     $timestamp = [DateTimeOffset]$queryResult.LastSignInDateTime
-                    if (-not $latestByUserId.ContainsKey($userId) -or $timestamp -gt $latestByUserId[$userId]) {
-                        $latestByUserId[$userId] = $timestamp
+                    $targetMap = if ($tableName -eq 'SigninLogs') {
+                        $lastInteractiveByUserId
+                    }
+                    else {
+                        $lastNonInteractiveByUserId
+                    }
+                    if (-not $targetMap.ContainsKey($userId) -or $timestamp -gt $targetMap[$userId]) {
+                        $targetMap[$userId] = $timestamp
                     }
                 }
             }
@@ -100,13 +107,27 @@ try {
         'LastSignInDateTime',
         'SignInFound',
         'CheckedDateTime',
-        'Note'
+        'Note',
+        'LastInteractiveSignInDateTime',
+        'LastNonInteractiveSignInDateTime',
+        'SignInFoundJa',
+        'QueriedSignInTypes',
+        'QueriedSignInTypesJa',
+        'SignInPattern',
+        'SignInPatternJa',
+        'EvaluationWindowStartDateTime',
+        'EvaluationWindowEndDateTime',
+        'NoteJa'
     )
-    $rows = @(ConvertTo-SignInReviewReportRow `
+    $rows = @(ConvertTo-GroupAppSignInReportRow `
         -Users $users `
-        -LatestByUserId $latestByUserId `
+        -LastInteractiveByUserId $lastInteractiveByUserId `
+        -LastNonInteractiveByUserId $lastNonInteractiveByUserId `
+        -IncludeNonInteractiveSignIns ([bool]$config.Query.IncludeNonInteractiveSignIns) `
         -AppDisplayName ([string]$config.TargetApp.DisplayName) `
         -AppId ([string]$config.TargetApp.AppId) `
+        -EvaluationWindowStartDateTime $windowStart `
+        -EvaluationWindowEndDateTime $checkedAt `
         -CheckedDateTime $checkedAt)
 
     $sortedRows = @($rows | Sort-Object UserPrincipalName, UserId)
