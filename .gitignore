@@ -1,11 +1,13 @@
 # Local configuration (may contain tenant-specific identifiers)
 config/config.json
 config/*.local.json
+config/*.config.json
 
 # Generated personal data and operational logs
 output/
 logs/
 *.log
+*.kql.local
 
 # PowerShell/editor artifacts
 *.clixml

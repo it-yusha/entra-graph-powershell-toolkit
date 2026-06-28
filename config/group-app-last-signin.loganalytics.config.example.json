@@ -1,0 +1,25 @@
+{
+  "SchemaVersion": "1.0",
+  "TenantId": "",
+  "SubscriptionId": "",
+  "WorkspaceId": "00000000-0000-0000-0000-000000000003",
+  "GroupId": "00000000-0000-0000-0000-000000000001",
+  "MembershipMode": "Transitive",
+  "TargetApp": {
+    "AppId": "00000000-0000-0000-0000-000000000002",
+    "DisplayName": "Example Business Application"
+  },
+  "Query": {
+    "LookbackDays": 730,
+    "IncludeNonInteractiveSignIns": true,
+    "BatchSize": 500,
+    "KqlTemplatePath": "../kql/group-app-last-signin.kql"
+  },
+  "Output": {
+    "CsvPath": "../output/group-app-last-signin-loganalytics.csv"
+  },
+  "Logging": {
+    "Directory": "../logs",
+    "Level": "Information"
+  }
+}

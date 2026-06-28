@@ -1,0 +1,3 @@
+"UserPrincipalName","DisplayName","UserId","AppDisplayName","AppId","LastSignInDateTime","SignInFound","CheckedDateTime","Note"
+"alex.taylor@example.invalid","Alex Taylor","10000000-0000-0000-0000-000000000001","Example Business Application","00000000-0000-0000-0000-000000000002","2026-06-01T10:00:00.0000000+00:00","True","2026-06-28T00:00:00.0000000+00:00",""
+"jamie.lee@example.invalid","Jamie Lee","10000000-0000-0000-0000-000000000002","Example Business Application","00000000-0000-0000-0000-000000000002","","False","2026-06-28T00:00:00.0000000+00:00","No successful sign-in was found for the specified app and period. This does not mean the app has never been used."

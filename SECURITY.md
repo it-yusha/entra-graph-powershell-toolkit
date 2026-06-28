@@ -4,7 +4,7 @@
 
 Never commit or publish:
 
-- real tenant, group, application, service principal, or user identifiers;
+- real tenant, subscription, Workspace, group, application, service principal, or user identifiers;
 - real UPNs, email addresses, display names, or company domains;
 - sign-in events, generated CSV files, screenshots, or operational logs;
 - client secrets, access/refresh tokens, certificate private keys, or passwords;
@@ -31,6 +31,11 @@ The report contains personal data and employee application-use metadata. Apply:
 - local and legal privacy requirements.
 
 The cumulative CSV is an operational convenience, not a substitute for a governed audit-log archive.
+
+For Log Analytics-based reports, do not disclose the Workspace ID, subscription,
+retention design, table availability, KQL diagnostics, or long-term raw-log
+details to a report recipient unless that disclosure is separately approved.
+Share the minimal generated CSV rather than query responses or operational logs.
 
 ## Internal customization
 

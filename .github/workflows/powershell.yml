@@ -27,8 +27,11 @@ jobs:
       - name: Run PSScriptAnalyzer
         shell: pwsh
         run: |
-          Invoke-ScriptAnalyzer `
-            -Path ./scripts `
-            -Recurse `
-            -Settings ./PSScriptAnalyzerSettings.psd1 `
-            -EnableExit
+          $findings = @(
+            Invoke-ScriptAnalyzer -Path ./scripts -Recurse -Settings ./PSScriptAnalyzerSettings.psd1
+            Invoke-ScriptAnalyzer -Path ./modules -Recurse -Settings ./PSScriptAnalyzerSettings.psd1
+          )
+          if ($findings) {
+            $findings | Format-Table -AutoSize
+            throw "PSScriptAnalyzer findings detected."
+          }
