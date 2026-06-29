@@ -2,6 +2,8 @@
 config/config.json
 config/*.local.json
 config/*.config.json
+config/conditional-access-exclude-users.csv
+config/conditional-access-exclude-apps.csv
 
 # Generated personal data and operational logs
 input/

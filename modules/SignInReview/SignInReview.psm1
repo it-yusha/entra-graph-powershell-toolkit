@@ -1069,24 +1069,33 @@ function Export-SignInReviewCsv {
     }
 }
 
+. (Join-Path $PSScriptRoot 'ConditionalAccessAnalysis.ps1')
+
 Export-ModuleMember -Function @(
     'Connect-SignInReviewAzure',
     'Connect-SignInReviewGraph',
     'ConvertTo-AdminAccountInactivityReviewRow',
     'ConvertTo-AdminAccountSignInKql',
+    'ConvertTo-ConditionalAccessAiMarkdown',
+    'ConvertTo-ConditionalAccessChecklistMarkdown',
+    'ConvertTo-ConditionalAccessNotAppliedKql',
+    'ConvertTo-ConditionalAccessNotAppliedReport',
     'ConvertTo-GroupAppSignInReportRow',
     'ConvertTo-SignInReviewReportRow',
     'Disconnect-SignInReviewGraph',
     'Export-SignInReviewCsv',
     'Get-SignInReviewUserByUpn',
+    'Get-SignInReviewUserById',
     'Get-SignInReviewGroupUser',
     'Import-AdminAccountReviewInput',
+    'Import-ConditionalAccessExclusion',
     'Initialize-SignInReviewLog',
     'Invoke-SignInReviewLogAnalyticsQuery',
     'ConvertTo-SignInReviewKql',
     'Protect-SignInReviewCsvText',
     'Read-SignInReviewConfiguration',
     'Read-AdminAccountInactivityConfiguration',
+    'Read-ConditionalAccessNotAppliedConfiguration',
     'Resolve-SignInReviewPath',
     'Split-SignInReviewBatch',
     'Write-SignInReviewLog'

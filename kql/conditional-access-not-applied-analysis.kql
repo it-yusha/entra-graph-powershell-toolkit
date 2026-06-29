@@ -1,0 +1,45 @@
+// Tokens are replaced by ConvertTo-ConditionalAccessNotAppliedKql.
+// This template mirrors the existing alert semantics while returning fields
+// needed for local, read-only analysis. Do not place tenant values here.
+SigninLogs
+| where TimeGenerated between (datetime({{START_UTC}}) .. datetime({{END_UTC}}))
+| where ConditionalAccessStatus == "notApplied"
+| where tostring(ResultType) == "0"
+| where ({{INCLUDE_USER_PREDICATE}})
+| where not({{EXCLUDE_USER_PREDICATE}})
+| where array_length(ConditionalAccessPolicies) > 0
+| where {{TOKEN_ISSUER_PREDICATE}}
+| mv-expand Policy = ConditionalAccessPolicies
+| extend PolicyResult = tostring(Policy.result)
+| summarize
+    PolicyResults = make_set(PolicyResult, 20),
+    UserPrincipalName = take_any(tostring(UserPrincipalName)),
+    UserId = take_any(tostring(UserId)),
+    UserDisplayName = take_any(tostring(UserDisplayName)),
+    AppDisplayName = take_any(tostring(AppDisplayName)),
+    AppId = take_any(tostring(AppId)),
+    ClientAppUsed = take_any(tostring(ClientAppUsed)),
+    ConditionalAccessStatus = take_any(tostring(ConditionalAccessStatus)),
+    ResultType = take_any(tostring(ResultType)),
+    ResultDescription = take_any(tostring(ResultDescription)),
+    IsInteractive = take_any(IsInteractive),
+    TokenIssuerType = take_any(tostring(TokenIssuerType))
+    {{SENSITIVE_AGGREGATIONS}}
+    by TimeGenerated, Id
+| where set_has_element(PolicyResults, "notApplied")
+| project
+    TimeGenerated,
+    Id,
+    UserPrincipalName,
+    UserId,
+    UserDisplayName,
+    AppDisplayName,
+    AppId,
+    ClientAppUsed,
+    ConditionalAccessStatus,
+    PolicyResults,
+    ResultType,
+    ResultDescription,
+    IsInteractive,
+    TokenIssuerType
+    {{SENSITIVE_PROJECTIONS}}

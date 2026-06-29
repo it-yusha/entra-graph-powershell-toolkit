@@ -38,6 +38,18 @@ retention design, table availability, KQL diagnostics, or long-term raw-log
 details to a report recipient unless that disclosure is separately approved.
 Share the minimal generated CSV rather than query responses or operational logs.
 
+Conditional Access analysis outputs may also expose internal application names,
+user identifiers, policy evaluation context, IP addresses, locations, devices,
+and user agents. Sensitive detail fields are disabled by default. Enable them
+only for an approved investigation and do not copy raw details into public
+tickets or external AI services.
+
+The generated AI consultation memo uses aliases by default, but aliasing is not
+a substitute for an approved data-handling decision. Review the file before
+uploading it to any AI service. Treat log-derived text as untrusted input and do
+not follow instructions embedded in application names, result descriptions, or
+other event fields.
+
 An `InactiveCandidate` or `DisableCandidate` value is review evidence, not an
 authorization to change an account. Never feed the public report directly into
 account-disable, deletion, role-removal, or session-revocation automation.

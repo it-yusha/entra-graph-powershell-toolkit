@@ -1,0 +1,53 @@
+{
+  "SchemaVersion": "1.0",
+  "TenantId": "",
+  "SubscriptionId": "",
+  "WorkspaceId": "00000000-0000-0000-0000-000000000003",
+  "Query": {
+    "LookbackDays": 7,
+    "KqlTemplatePath": "../kql/conditional-access-not-applied-analysis.kql",
+    "IncludeSensitiveDetails": false
+  },
+  "AlertScope": {
+    "IncludedUpnSuffixes": [
+      "@example.invalid"
+    ],
+    "IncludedUpnRegexPatterns": [
+      "^[abcdeABCDE0-9][0-9]{6}@example\\.invalid$"
+    ],
+    "ExcludedUpnSuffixes": [
+      "#EXT#@example.invalid"
+    ],
+    "ExcludedUserPrincipalNames": [
+      "excluded-service-account@example.invalid"
+    ],
+    "ExcludedTokenIssuerTypes": [
+      "AzureADBackupAuth"
+    ]
+  },
+  "GraphEnrichment": {
+    "Mode": "Optional",
+    "NewAccountGracePeriodDays": 5
+  },
+  "RepeatedMatchingSignIn": {
+    "MinimumDistinctDays": 2,
+    "MinimumEventCount": 2
+  },
+  "Exclusions": {
+    "UsersPath": "../config/conditional-access-exclude-users.csv",
+    "AppsPath": "../config/conditional-access-exclude-apps.csv",
+    "AllowMissingFiles": true
+  },
+  "Output": {
+    "Directory": "../output",
+    "GenerateDetailsCsv": true,
+    "GenerateAiPromptMarkdown": true,
+    "GenerateChecklistMarkdown": true,
+    "AiIdentityMode": "Alias",
+    "AiMaximumTopItems": 10
+  },
+  "Logging": {
+    "Directory": "../logs",
+    "Level": "Information"
+  }
+}

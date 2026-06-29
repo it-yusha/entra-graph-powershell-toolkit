@@ -1,0 +1,2 @@
+"UserAlias","AppAlias","UserPrincipalName","UserId","AppDisplayName","AppId","SignInCount","FirstSeen","LastSeen","ExcludedBy","ExcludeReason","ExclusionExpiresOn"
+"User-003","App-001","emergency.account@example.invalid","10000000-0000-0000-0000-000000000099","Example Business Application","00000000-0000-0000-0000-000000000002","1","2026-06-28T11:00:00.0000000+00:00","2026-06-28T11:00:00.0000000+00:00","ExcludeUsers","Approved emergency access account","2027-12-31"

@@ -1,0 +1,2 @@
+UserId,UserPrincipalName,Reason,ExpiresOn
+10000000-0000-0000-0000-000000000099,emergency.account@example.invalid,Approved emergency access account,2027-12-31
